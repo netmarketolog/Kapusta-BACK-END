@@ -1,6 +1,6 @@
 const express = require("express");
 
-const { tryCatchWrapper } = require("../helpers");
+const { tryCatchWrapper } = require("../helpers/tryCatchWrapper");
 const { validateId } = require("../middlewares/validateId");
 
 const { deleteTransactionController } = require("../controller/transactions");

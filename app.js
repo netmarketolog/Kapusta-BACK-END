@@ -19,6 +19,8 @@ app.use((req, res) => {
 })
 
 app.use((err, req, res, next) => {
+  console.error('Handling errors: ', err.message, err.name);
+
   res.status(500).json({ message: err.message })
 })
 

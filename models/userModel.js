@@ -11,7 +11,18 @@ const schema = mongoose.Schema(
       unique: true,
       match: [/[a-z0-9]+@[a-z0-9]+/, 'user email is not valid!'],
     },
-    token: String,
+    token: {
+      type: String,
+      default: null,
+    },
+    verify: {
+      type: Boolean,
+      default: false,
+    },
+    verificationToken: {
+      type: String,
+      required: [true, "Verify token is required"],
+    },
   },
   {
     versionKey: false,

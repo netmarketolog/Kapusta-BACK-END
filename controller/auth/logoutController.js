@@ -1,14 +1,20 @@
 const { User } = require("../../models/userModel");
+const { Unauthorized } = require("http-errors");
 
-const logout = async (req, res, next) => {
-  try {
-    const { _id } = req.user;
-    await User.findByIdAndUpdate(_id, { token: "" });
+async function logout(req, res, next) {
+  const { _id } = req.user;
 
-    res.status(201).json({ message: "logged out" });
-  } catch (error) {
-    next(error);
+  const storedUser = await User.findById({
+    _id,
+  });
+
+  if (!storedUser) {
+    throw Unauthorized('"Not authorized"');
   }
-};
+
+  await User.findByIdAndUpdate(_id, { token: "" });
+
+  res.status(204).json();
+}
 
 module.exports = { logout };

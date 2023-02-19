@@ -3,7 +3,7 @@ const bcrypt = require('bcrypt');
 const { Unauthorized } = require('http-errors');
 const jwt = require('jsonwebtoken');
 
-const { JWT_SECRET } = process.env;
+// const { JWT_SECRET } = process.env;
 
 async function login(req, res, next) {
   const { email, password } = req.body;
@@ -22,7 +22,7 @@ async function login(req, res, next) {
     throw Unauthorized('password is not valid');
   }
 
-  const token = jwt.sign({ id: storedUser._id }, JWT_SECRET, {
+  const token = jwt.sign({ id: storedUser._id }, process.env.JWT_SECRET, {
     expiresIn: '1h',
   });
   await User.findByIdAndUpdate(storedUser._id, { token });

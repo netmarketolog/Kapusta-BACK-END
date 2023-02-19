@@ -21,7 +21,11 @@ const schema = mongoose.Schema(
     },
     verificationToken: {
       type: String,
-      required: [true, "Verify token is required"],
+      default: null,
+    },
+    balance: {
+      type: Number,
+      default: 0,
     },
   },
   {

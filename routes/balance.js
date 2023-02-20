@@ -6,6 +6,6 @@ const { updateBalance } = require("../controller/balance/updateBalanceController
 
 const balanceRouter = express.Router();
 
-balanceRouter.patch("/update", authorize, tryCatchWrapper(updateBalance));
+balanceRouter.patch("/update", tryCatchWrapper(authorize), tryCatchWrapper(updateBalance));
 
 module.exports = { balanceRouter };

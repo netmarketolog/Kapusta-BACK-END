@@ -9,8 +9,8 @@ const { deleteTransactionController, addTransactionController } = require("../co
 const transactionsRouter = express.Router();
 
 transactionsRouter.post(
-  "/transaction", 
-  authorize,
+  "/transaction/add", 
+  tryCatchWrapper(authorize),
   tryCatchWrapper(addTransactionController));
 
 transactionsRouter.delete(

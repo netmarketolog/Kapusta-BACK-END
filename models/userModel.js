@@ -1,5 +1,6 @@
 const mongoose = require('mongoose');
-const Joi = require("joi");
+
+const { balanceSchema } = require("../schemas/user");
 
 const schema = mongoose.Schema(
   {
@@ -37,11 +38,6 @@ const schema = mongoose.Schema(
 
 const User = mongoose.model('user', schema);
 
-const balanceSchema = Joi.object({
-  totalBalance: Joi.number().required(),
-});
+const schemas = { balanceSchema };
 
-module.exports = {
-  User, 
-  balanceSchema,
-};
+module.exports = { User, schemas };

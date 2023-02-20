@@ -30,7 +30,8 @@ async function login(req, res, next) {
   res.json({
     token,
     user: {
-      email: storedUser.email
+      email: storedUser.email,
+      balance: storedUser.balance,
     },
   });
 }

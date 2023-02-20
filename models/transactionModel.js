@@ -1,5 +1,7 @@
 const mongoose = require("mongoose");
 
+const { transactionSchema } = require("../schemas/transaction");
+
 const schema = mongoose.Schema(
   {
     date: {
@@ -37,6 +39,6 @@ const schema = mongoose.Schema(
 
 const Transaction = mongoose.model("transaction", schema);
 
-module.exports = {
-  Transaction,
-};
+const schemas = { transactionSchema };
+
+module.exports = { Transaction, schemas };

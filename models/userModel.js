@@ -1,5 +1,7 @@
 const mongoose = require('mongoose');
 
+const { balanceSchema } = require("../schemas/user");
+
 const schema = mongoose.Schema(
   {
     password: {
@@ -27,6 +29,10 @@ const schema = mongoose.Schema(
       type: Number,
       default: 0,
     },
+    totalBalance: {
+      type: Number,
+      default: 0,
+    },
   },
   {
     versionKey: false,
@@ -36,6 +42,6 @@ const schema = mongoose.Schema(
 
 const User = mongoose.model('user', schema);
 
-module.exports = {
-  User,
-};
+const schemas = { balanceSchema };
+
+module.exports = { User, schemas };

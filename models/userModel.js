@@ -1,4 +1,5 @@
 const mongoose = require('mongoose');
+const Joi = require("joi");
 
 const schema = mongoose.Schema(
   {
@@ -23,6 +24,10 @@ const schema = mongoose.Schema(
       type: String,
       required: [true, "Verify token is required"],
     },
+    totalBalance: {
+      type: Number,
+      default: 0,
+    },
   },
   {
     versionKey: false,
@@ -32,6 +37,11 @@ const schema = mongoose.Schema(
 
 const User = mongoose.model('user', schema);
 
+const balanceSchema = Joi.object({
+  totalBalance: Joi.number().required(),
+});
+
 module.exports = {
-  User,
+  User, 
+  balanceSchema,
 };

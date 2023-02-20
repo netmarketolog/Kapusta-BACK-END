@@ -1,4 +1,5 @@
 const mongoose = require("mongoose");
+const Joi = require("joi");
 
 const schema = mongoose.Schema(
   {
@@ -37,6 +38,15 @@ const schema = mongoose.Schema(
 
 const Transaction = mongoose.model("transaction", schema);
 
+const transactionSchema = Joi.object({
+  date: Joi.date().required(),
+  description: Joi.string().required(),
+  category: Joi.string().required(),
+  sum: Joi.number().required(),
+  operation: Joi.string().required(),
+});
+
 module.exports = {
   Transaction,
+  transactionSchema,
 };

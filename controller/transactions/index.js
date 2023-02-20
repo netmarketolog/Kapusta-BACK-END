@@ -1,5 +1,11 @@
 const {
   deleteTransactionController,
 } = require("./deleteTransactionController");
+const {
+  addTransactionController,
+} = require("./addTransactionController");
 
-module.exports = { deleteTransactionController };
+module.exports = { 
+  deleteTransactionController,
+  addTransactionController,
+};

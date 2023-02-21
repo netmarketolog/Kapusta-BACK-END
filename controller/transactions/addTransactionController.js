@@ -1,4 +1,5 @@
-const { Transaction, transactionSchema } = require("../../models/transactionModel");
+const { Transaction } = require("../../models/transactionModel");
+const { transactionSchema } = require("../../schemas/transaction");
 const { User } = require('../../models/userModel');
 const { BadRequest } = require('http-errors');
 

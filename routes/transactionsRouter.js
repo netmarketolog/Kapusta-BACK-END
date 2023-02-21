@@ -13,7 +13,7 @@ const {
 const transactionsRouter = express.Router();
 
 transactionsRouter.post(
-  "/transaction/add",
+  "/",
   tryCatchWrapper(authorize),
   addTransactionController
 );

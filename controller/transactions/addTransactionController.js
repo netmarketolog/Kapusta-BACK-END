@@ -4,7 +4,7 @@ const { BadRequest } = require('http-errors');
 
 const addTransactionController = async (req, res, next) => {
     try {
-      const { _id, totalBalance } = req.user;
+      const { _id, balance } = req.user;
       const { operation, sum } = req.body;
   
       const { error } = transactionSchema.validate(req.body);
@@ -15,13 +15,13 @@ const addTransactionController = async (req, res, next) => {
       const result = await Transaction.create({ ...req.body, owner: _id });
   
       const newBalance =
-      operation === "income" ? totalBalance + sum : totalBalance - sum;
+      operation === "income" ? balance + sum : balance - sum;
   
-      await User.findByIdAndUpdate(_id, { totalBalance: newBalance });
+      await User.findByIdAndUpdate(_id, { balance: newBalance });
   
       res.status(201).json({
         result,
-        totalBalance: newBalance,
+        balance: newBalance,
       });
     } catch (error) {
       next(error);

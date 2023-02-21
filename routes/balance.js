@@ -8,4 +8,4 @@ const balanceRouter = express.Router();
 
 balanceRouter.patch("/update", tryCatchWrapper(authorize), tryCatchWrapper(updateBalance));
 
-module.exports = { balanceRouter };
+module.exports =  balanceRouter ;

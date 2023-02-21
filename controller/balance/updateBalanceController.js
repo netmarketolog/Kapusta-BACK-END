@@ -11,7 +11,7 @@ const updateBalance = async (req, res, next) => {
         NotFound("User not found");
     }
     res.status(201).json({
-      message: `Balance updated, new balance is: ${result.totalBalance}`,
+      message: `Balance updated, new balance is: ${result.balance}`,
     });
   } catch (error) {
     next(error);

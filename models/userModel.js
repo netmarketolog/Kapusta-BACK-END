@@ -29,10 +29,6 @@ const schema = mongoose.Schema(
       type: Number,
       default: 0,
     },
-    totalBalance: {
-      type: Number,
-      default: 0,
-    },
   },
   {
     versionKey: false,

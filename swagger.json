@@ -1,0 +1,309 @@
+{
+  "openapi": "3.0.1",
+  "info": {
+    "version": "2.0.2",
+    "title": "Kapusta",
+    "description": "API documentation for team project 'Kapusta'",
+    "license": {
+      "name": "MIT",
+      "url": "https://opensource.org/licenses/MIT"
+    }
+  },
+  "consumes": ["application/json"],
+  "produces": ["application/json"],
+  "servers": [{ "url": "http://localhost:3000" }],
+  "tags": [
+    {
+      "name": "Auth",
+      "description": "Authorization endpoints"
+    },
+    {
+      "name": "Transactions",
+      "description": "Transavtions endpoints"
+    },
+    {
+      "name": "???????",
+      "description": "????? endpoints"
+    }
+  ],
+  "paths": {
+    "/auth/users/register": {
+      "post": {
+        "tags": ["Auth"],
+        "summary": "User registration",
+        "parameters": [],
+        "security": [{ "Bearer": [] }],
+        "requestBody": {
+          "description": "Registration's object",
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/RegistrationRequest"
+              }
+            }
+          }
+        },
+        "responses": {
+          "201": {
+            "description": "User created",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/RegistrationResponse"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Bad request (invalid request body)",
+            "content": {}
+          },
+          "409": {
+            "description": "Conflict / Email in use!",
+            "content": {}
+          }
+        }
+      }
+    },
+    "/auth/users/login": {
+      "post": {
+        "tags": ["Auth"],
+        "summary": "User login",
+        "parameters": [],
+        "security": [{ "Bearer": [] }],
+        "requestBody": {
+          "description": "Login's object",
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/LoginRequest"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Successful operation",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/LoginResponse"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Bad request",
+            "content": {}
+          },
+          "401": {
+            "description": "Email or password is wrong",
+            "content": {}
+          }
+        }
+      }
+    },
+    "/auth/users/logout": {
+      "post": {
+        "tags": ["Auth"],
+        "summary": "User logout",
+        "parameters": [],
+        "security": [{ "Bearer": [] }],
+        "responses": {
+          "204": {
+            "description": "Successful operation",
+            "content": {}
+          },
+          "401": {
+            "description": "Not authorized",
+            "content": {}
+          }
+        }
+      }
+    },
+    "/auth/google": {
+      "get": {
+        "tags": ["Auth"],
+        "summary": "Google authentication",
+        "responses": {
+          "200": {
+            "description": "Successful operation / redirect to frontend",
+            "content": {}
+          }
+        },
+        "400": {
+          "description": "Bad request (invalid request body)",
+          "content": {}
+        },
+        "409": {
+          "description": "Email in use!",
+          "content": {}
+        }
+      }
+    },
+    "/transactions/transaction/add": {
+        "post": {
+            "tags": ["Transactions"],
+            "summary": "Add transaction",
+            "security": [{ "Bearer": [] }],
+            "parameters": [],
+            "requestBody": {
+                "description": "transaction object",
+                "required": true,
+                "content": {}
+            },
+        "responses": {
+          "200": {
+            "description": "Successful operation",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/NewTransaction"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Bad request (invalid request body) / No token provided",
+            "content": {}
+          },
+          "401": {
+            "description": "Unauthorized",
+            "content": {}
+          },
+          "404": {
+            "description": "Invalid user / Invalid session",
+            "content": {}
+          }
+        }
+        }
+    },
+    "/transactions/:operation": {
+        "get": {
+          "tags": ["Transactions"]
+        }
+    },
+    "/transactions/report/:operation": {
+        "get": {
+          "tags": ["Transactions"]
+        }
+    },
+    "/transactions/:transactionId": {
+        "delete": {
+          "tags": ["Transactions"],
+          "summary": "Delete transaction",
+          "security": [{ "Bearer": [] }],
+          "parameters": [
+            {
+              "name": "transactionId",
+              "type": "string",
+              "description": "Transaction's id",
+              "required": true,
+              "in": "path"
+            }
+          ],
+          "responses": {
+            "200": {
+              "description": "Transaction is deleted",
+              "content": {}
+            },
+            "400": {
+              "description": "Bad request (invalid id) / No token provided",
+              "content": {}
+            },
+            "401": {
+              "description": "Unauthorized",
+              "content": {}
+            },
+            "404": {
+              "description": "Invalid user / Invalid session",
+              "content": {}
+            }
+          }
+        }
+    }
+  },
+
+  "components": {
+    "schemas": {
+      "RegistrationRequest": {
+        "type": "object",
+        "required": ["email"],
+        "properties": {
+          "email": {
+            "type": "string",
+            "description": "User's email",
+            "format": "email"
+          },
+          "password": {
+            "type": "string",
+            "description": "User's password",
+            "example": "qwerty123"
+          }
+        }
+      },
+      "RegistrationResponse": {
+        "type": "array",
+        "items": {
+          "type": "object",
+          "properties": {
+            "email": {
+              "type": "string",
+              "description": "User's email",
+              "format": "email"
+            }
+          }
+        },
+        "example": [
+          { "email": "user1@gmail.com" },
+          { "email": "user2@gmail.com" }
+        ]
+      },
+      "LoginRequest": {
+        "type": "object",
+        "required": ["email"],
+        "properties": {
+          "email": {
+            "type": "string",
+            "description": "User's email",
+            "format": "email"
+          },
+          "password": {
+            "type": "string",
+            "description": "User's password",
+            "example": "qwerty123"
+          }
+        }
+      },
+      "LoginResponse": {
+        "type": "object",
+        "properties": {
+          "email": {
+            "type": "string",
+            "description": "User's email",
+            "format": "email"
+          },
+          "balance": {
+            "type": "number",
+            "description": "User's balance",
+            "example": "2023"
+          },
+          "token": {
+            "type": "string",
+            "description": "User's token for app",
+            "example": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjYzZjQ5YWQyZDkyYmY3NTQ0MDQ4ZWZkNSIsImlhdCI6MTY3Njk3NDkzNiwiZXhwIjoxNjc2OTc4NTM2fQ.J8fIHTUNL7JXGQwRJBFfbZhX1eTiGk7U48sEnJOSsrw"
+          }
+        }
+      }
+    },
+    "securitySchemes": {
+      "Bearer": {
+        "type": "http",
+        "scheme": "bearer",
+        "bearerFormat": "JWT"
+      }
+    }
+  }
+}

@@ -10,8 +10,9 @@ const updateBalance = async (req, res, next) => {
     if (!result) {
         NotFound("User not found");
     }
-    res.status(201).json({
-      message: `Balance updated, new balance is: ${result.balance}`,
+    res.status(200).json({
+      email: result.email,
+      balance: result.balance,
     });
   } catch (error) {
     next(error);

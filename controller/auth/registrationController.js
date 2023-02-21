@@ -1,9 +1,10 @@
 const { User } = require('../../models/userModel');
 const bcrypt = require('bcrypt');
-const { Conflict } = require('http-errors');
+const { Conflict, BadRequest } = require('http-errors');
 
 async function register(req, res, next) {
     const { email, password } = req.body;
+    if(!email) throw BadRequest("email is required");
     const salt = await bcrypt.genSalt();
     const hashedPassword = await bcrypt.hash(password, salt);
     try { 

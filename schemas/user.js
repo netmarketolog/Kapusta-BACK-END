@@ -1,7 +1,7 @@
 const Joi = require("joi");
 
 const balanceSchema = Joi.object({
-    totalBalance: Joi.number().required(),
+    balance: Joi.number().required(),
 });
 
 module.exports = {

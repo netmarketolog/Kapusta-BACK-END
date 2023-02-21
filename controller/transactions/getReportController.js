@@ -1,10 +1,13 @@
 const { mongoose } = require("mongoose");
+const { BadRequest } = require("http-errors");
 const { Transaction } = require("../../models");
 
 const getReportController = async (req, res, next) => {
-  const { _id } = req.body; // req.user
+  const { _id } = req.user;
   const { operation } = req.params;
   let { year, month } = req.query;
+  if (!year || !month || month > 12 || month < 1 || year < 2022)
+    throw BadRequest("Bad query request!");
 
   year = Number(year);
   month = Number(month);

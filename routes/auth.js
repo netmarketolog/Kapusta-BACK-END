@@ -1,4 +1,4 @@
-const express = require('express');
+const express = require("express");
 
 const { tryCatchWrapper } = require('../helpers/tryCatchWrapper');
 const { authorize } = require('../middlewares/authorize');
@@ -17,5 +17,6 @@ authRouter.post('/users/login', tryCatchWrapper(login));
 authRouter.post('/users/logout', tryCatchWrapper(authorize), tryCatchWrapper(logout));
 authRouter.get('/google', tryCatchWrapper(googleAuth));
 authRouter.get('/google-redirect', tryCatchWrapper(googleRedirect));
+
 
 module.exports = authRouter;

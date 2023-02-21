@@ -2,7 +2,6 @@ const express = require("express");
 
 const { tryCatchWrapper } = require("../helpers/tryCatchWrapper");
 const { authorize } = require("../middlewares/authorize");
-const { validateId } = require("../middlewares/validateId");
 
 const {
   deleteTransactionController,
@@ -21,17 +20,19 @@ transactionsRouter.post(
 
 transactionsRouter.get(
   "/:operation",
+  tryCatchWrapper(authorize),
   tryCatchWrapper(getTransactionsController)
 );
 
 transactionsRouter.get(
   "/report/:operation",
+  tryCatchWrapper(authorize),
   tryCatchWrapper(getReportController)
 );
 
 transactionsRouter.delete(
   "/:transactionId",
-  validateId(),
+  tryCatchWrapper(authorize),
   tryCatchWrapper(deleteTransactionController)
 );
 

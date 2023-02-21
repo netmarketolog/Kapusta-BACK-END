@@ -2,16 +2,16 @@ const { User } = require("../../models");
 const mongoose = require("mongoose");
 const { BadRequest } = require("http-errors");
 
-const { getArrayOfMonthes } = require("../../helpers/getArrayOfMonthes");
+const { getAggregationObject } = require("../../helpers/getAggregationObject");
 
 const getTransactionsController = async (req, res, next) => {
-  const { _id } = req.body; // req.user
+  const { _id } = req.user;
   const { operation } = req.params;
 
   if (operation !== "expense" && operation !== "income")
     return next(BadRequest("Bad request!"));
 
-  const { filterByMonthes, addTotalSum } = getArrayOfMonthes(operation);
+  const { filterByMonthes, addTotalSum } = getAggregationObject(operation);
 
   const result = await User.aggregate([
     {
@@ -29,19 +29,18 @@ const getTransactionsController = async (req, res, next) => {
     },
     {
       $project: {
-        balance: 1,
+        _id: 0,
         ...filterByMonthes,
       },
     },
     {
       $project: {
-        balance: 1,
         ...addTotalSum,
       },
     },
   ]);
 
-  res.json(result);
+  res.json(result[0]);
 };
 
 module.exports = { getTransactionsController };

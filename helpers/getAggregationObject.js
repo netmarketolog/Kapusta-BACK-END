@@ -1,4 +1,4 @@
-const getArrayOfMonthes = (operation) => {
+const getAggregationObject = (operation) => {
   const date = new Date();
   const currentMonth = date.getMonth();
   const currentYear = date.getFullYear();
@@ -64,5 +64,5 @@ const getArrayOfMonthes = (operation) => {
   return { filterByMonthes, addTotalSum };
 };
 module.exports = {
-  getArrayOfMonthes,
+  getAggregationObject,
 };

@@ -16,7 +16,7 @@ const transactionsRouter = express.Router();
 transactionsRouter.post(
   "/transaction/add",
   tryCatchWrapper(authorize),
-  tryCatchWrapper(addTransactionController)
+  addTransactionController
 );
 
 transactionsRouter.get(

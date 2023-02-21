@@ -23,7 +23,7 @@ async function login(req, res, next) {
   }
 
   const token = jwt.sign({ id: storedUser._id }, process.env.JWT_SECRET, {
-    expiresIn: '1h',
+    expiresIn: '24h',
   });
   await User.findByIdAndUpdate(storedUser._id, { token });
 

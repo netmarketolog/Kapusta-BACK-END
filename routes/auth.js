@@ -12,9 +12,9 @@ const {
 
 const authRouter = express.Router();
 
-authRouter.post('/users/register', tryCatchWrapper(register));
-authRouter.post('/users/login', tryCatchWrapper(login));
-authRouter.post('/users/logout', tryCatchWrapper(authorize), tryCatchWrapper(logout));
+authRouter.post('/register', tryCatchWrapper(register));
+authRouter.post('/login', tryCatchWrapper(login));
+authRouter.post('/logout', tryCatchWrapper(authorize), tryCatchWrapper(logout));
 authRouter.get('/google', tryCatchWrapper(googleAuth));
 authRouter.get('/google-redirect', tryCatchWrapper(googleRedirect));
 

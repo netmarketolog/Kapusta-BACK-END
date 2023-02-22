@@ -1,4 +1,4 @@
-const getAggregationObject = (operation) => {
+const getAggregationObject = operation => {
   const date = new Date();
   const currentMonth = date.getMonth();
   const currentYear = date.getFullYear();
@@ -32,15 +32,18 @@ const getAggregationObject = (operation) => {
     filterByMonthes[`${startYear}-${start}`] = {
       transactions: {
         $filter: {
-          input: "$userTransactions",
-          as: "transaction",
+          input: '$userTransactions',
+          as: 'transaction',
           cond: {
             $and: [
               {
-                $gte: ["$$transaction.createdAt", new Date(startYear, start)],
+                $gte: ['$$transaction.createdAt', new Date(startYear, start)],
               },
               {
-                $lt: ["$$transaction.createdAt", new Date(endYear, end)],
+                $lt: ['$$transaction.createdAt', new Date(endYear, end)],
+              },
+              {
+                $eq: ['$$transaction.operation', operation],
               },
             ],
           },
@@ -54,7 +57,7 @@ const getAggregationObject = (operation) => {
           input: `$${startYear}-${start}.transactions`,
           initialValue: 0,
           in: {
-            $add: ["$$value", "$$this.sum"],
+            $add: ['$$value', '$$this.sum'],
           },
         },
       },

@@ -146,7 +146,7 @@
     "/transactions/": {
         "post": {
             "tags": ["Transactions"],
-            "summary": "Add expence transaction",
+            "summary": "Add expence transaction or add income transaction",
             "security": [{ "Bearer": [] }],
             "parameters": [],
             "requestBody": {
@@ -155,7 +155,7 @@
                 "content": {
                   "application/json": {
                     "schema": {
-                      "$ref": "#/components/schemas/ExpenseRequest"
+                      "$ref": "#/components/schemas/TransactionRequest"
                     }
                   }
                 }
@@ -166,7 +166,7 @@
             "content": {
               "application/json": {
                 "schema": {
-                  "$ref": "#/components/schemas/ExpenceResponce"
+                  "$ref": "#/components/schemas/TransactionResponce"
                 }
               }
             }
@@ -211,7 +211,7 @@
               "content": {
                 "application/json": {
                   "schema": {
-                    "$ref": "#/components/schemas/TransactinReport"
+                    "$ref": "#/components/schemas/TransactionReport"
                   }
                 }
               }
@@ -378,23 +378,23 @@
           }
         }
       },
-      "ExpenseRequest": {
+      "TransactionRequest": {
         "type": "object",
         "required": ["date", "description", "category", "sum", "operation"],
         "properties":{
           "date": {
             "type": "string",
-            "description": "Expense date",
+            "description": "Expense/income date",
             "example": "2023-02-22"
           },
           "description": {
             "type": "string",
-            "description": "Expense description",
+            "description": "Expense/income description",
             "example": "alcohol"
           },
           "category": {
             "type": "string",
-            "description": "Expense date",
+            "description": "Expense/income date",
             "example": "Alcohol",
             "enum": [
               "Products",
@@ -407,12 +407,14 @@
               "Communal, communication",
               "Sports, hobbies",
               "Education",
-              "Other"
+              "Other",
+              "My",
+              "Wife"
             ]
           },
           "sum": {
             "type": "integer",
-            "description": "Expense sum/amount",
+            "description": "Expense/income amount",
             "minimum": 1,
             "maximum": 1000000000,
             "example": 1000
@@ -424,23 +426,23 @@
           }
         }
       },
-      "ExpenceResponce": {
+      "TransactionResponce": {
         "type": "object",
         "properties": {
           "result": {
             "date": {
               "type": "string",
-              "description": "Expense date",
+              "description": "Expense/income date",
               "example": "2023-02-22"
             },
             "description": {
               "type": "string",
-              "description": "Expense description",
+              "description": "Expense/income description",
               "example": "alcohol"
             },
             "category": {
               "type": "string",
-              "description": "Expense date",
+              "description": "Expense/income category",
               "example": "Alcohol",
               "enum": [
                 "Products",
@@ -453,12 +455,14 @@
                 "Communal, communication",
                 "Sports, hobbies",
                 "Education",
-                "Other"
+                "Other",
+                "My",
+                "Wife"
               ]
             },
             "sum": {
               "type": "integer",
-              "description": "Expense sum/amount",
+              "description": "Expense/income amount",
               "minimum": 1,
               "maximum": 1000000000,
               "example": 1000
@@ -491,40 +495,51 @@
           },
           "balance": {
             "type": "integer",
-            "description": "balance after expens transaction",
+            "description": "balance after expens/income transaction",
             "example": 100,
             "minimum": 1,
             "maximum": 10000000
           }
         }
       },
-      "TransactinReport": {
+      "TransactionReport": {
         "type": "object",
         "properties": {
-          "_id":{},
-  
-          "expenses": {
+          "income": {
+            "type": "integer",
+            "example": 12000
+          },
+          "expense": {
+            "type": "integer",
+            "example": 6000
+          },
+          "statistics": {
             "type": "object",
             "properties": {
-              "total": {
-                "type": "integer",
-                "description": "total expence for this period",
-                "example": 3500
+              "_id": {
+                "type": "string",
+                "description": "category of expence",
+                "example": "products"
               },
-              "incomesData": {
+              "stats": {
                 "type": "object",
-                "example": {
-                  "Alcohol": {
-                    "total": 4000,
-                    "whiskey": 3500,
-                    "beer": 500
+                "properties": {
+                  "name": {
+                    "type": "string",
+                    "description": "product name",
+                    "example": "pork"
                   },
-                  "Health": {
-                    "total": 2000,
-                    "medicine": 500,
-                    "doctor": 1500
+                  "total": {
+                    "type": "integer",
+                    "description": "total amount",
+                    "example": 600
                   }
                 }
+              },
+              "total": {
+                "type": "integer",
+                "description": "total in thic category",
+                "example": 600
               }
             }
           }
@@ -534,7 +549,12 @@
         "required": ["newBalance"],
         "type": "object",
         "properties": {
-          "newBalance": {
+          "email": {
+            "type": "string",
+            "description": "user email",
+            "example": "user1@gmail.com"
+          },
+          "balance": {
             "type": "integer",
             "description": "New balance",
             "example": 100,

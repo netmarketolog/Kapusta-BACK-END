@@ -22,12 +22,12 @@
       "description": "Transavtions endpoints"
     },
     {
-      "name": "???????",
-      "description": "????? endpoints"
+      "name": "User",
+      "description": "User's endpoints"
     }
   ],
   "paths": {
-    "/auth/users/register": {
+    "/auth/register": {
       "post": {
         "tags": ["Auth"],
         "summary": "User registration",
@@ -66,7 +66,7 @@
         }
       }
     },
-    "/auth/users/login": {
+    "/auth/login": {
       "post": {
         "tags": ["Auth"],
         "summary": "User login",
@@ -105,7 +105,7 @@
         }
       }
     },
-    "/auth/users/logout": {
+    "/auth/logout": {
       "post": {
         "tags": ["Auth"],
         "summary": "User logout",
@@ -143,16 +143,22 @@
         }
       }
     },
-    "/transactions/transaction/add": {
+    "/transactions/": {
         "post": {
             "tags": ["Transactions"],
-            "summary": "Add transaction",
+            "summary": "Add expence transaction",
             "security": [{ "Bearer": [] }],
             "parameters": [],
             "requestBody": {
                 "description": "transaction object",
                 "required": true,
-                "content": {}
+                "content": {
+                  "application/json": {
+                    "schema": {
+                      "$ref": "#/components/schemas/ExpenseRequest"
+                    }
+                  }
+                }
             },
         "responses": {
           "200": {
@@ -160,13 +166,13 @@
             "content": {
               "application/json": {
                 "schema": {
-                  "$ref": "#/components/schemas/NewTransaction"
+                  "$ref": "#/components/schemas/ExpenceResponce"
                 }
               }
             }
           },
           "400": {
-            "description": "Bad request (invalid request body) / No token provided",
+            "description": "Bad request (field is required)/ No token provided",
             "content": {}
           },
           "401": {
@@ -174,7 +180,7 @@
             "content": {}
           },
           "404": {
-            "description": "Invalid user / Invalid session",
+            "description": "Not Found",
             "content": {}
           }
         }
@@ -187,7 +193,42 @@
     },
     "/transactions/report/:operation": {
         "get": {
-          "tags": ["Transactions"]
+          "tags": ["Transactions"],
+          "summary": "Get transactions report for some period",
+          "security": [{ "Bearer": [] }],
+          "parameters": [
+            {
+              "name": "date",
+              "in": "query",
+              "required": true,
+              "type": "string",
+              "description": "Period dates. YYYY-MM format"
+            }
+          ],
+          "responses": {
+            "200": {
+              "description": "Successful operation",
+              "content": {
+                "application/json": {
+                  "schema": {
+                    "$ref": "#/components/schemas/TransactinReport"
+                  }
+                }
+              }
+            },
+            "400": {
+              "description": "Bad request (invalid 'date' format) / No token provided",
+              "content": {}
+            },
+            "401": {
+              "description": "Unauthorized",
+              "content": {}
+            },
+            "404": {
+              "description": "Invalid user / Invalid session",
+              "content": {}
+            }
+          }
         }
     },
     "/transactions/:transactionId": {
@@ -223,6 +264,46 @@
             }
           }
         }
+    },
+    "/users/update": {
+      "patch": {
+        "tags": ["User"],
+        "summary": "Update user's balance",
+        "parameters": [],
+        "security": [{ "Bearer": [] }],
+        "requestBody": {
+          "description": "New balance object",
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/NewBalance"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Successful operation",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/NewBalance"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Bad request (invalid request body) / No token provided",
+            "content": {}
+          },
+          "401": {
+            "description": "Unauthorized",
+            "content": {}
+          }
+        }
+      }
+
     }
   },
 
@@ -230,7 +311,7 @@
     "schemas": {
       "RegistrationRequest": {
         "type": "object",
-        "required": ["email"],
+        "required": ["email", "password"],
         "properties": {
           "email": {
             "type": "string",
@@ -294,6 +375,171 @@
             "type": "string",
             "description": "User's token for app",
             "example": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjYzZjQ5YWQyZDkyYmY3NTQ0MDQ4ZWZkNSIsImlhdCI6MTY3Njk3NDkzNiwiZXhwIjoxNjc2OTc4NTM2fQ.J8fIHTUNL7JXGQwRJBFfbZhX1eTiGk7U48sEnJOSsrw"
+          }
+        }
+      },
+      "ExpenseRequest": {
+        "type": "object",
+        "required": ["date", "description", "category", "sum", "operation"],
+        "properties":{
+          "date": {
+            "type": "string",
+            "description": "Expense date",
+            "example": "2023-02-22"
+          },
+          "description": {
+            "type": "string",
+            "description": "Expense description",
+            "example": "alcohol"
+          },
+          "category": {
+            "type": "string",
+            "description": "Expense date",
+            "example": "Alcohol",
+            "enum": [
+              "Products",
+              "Alcohol",
+              "Entertainment",
+              "Health",
+              "Transport",
+              "Housing",
+              "Technique",
+              "Communal, communication",
+              "Sports, hobbies",
+              "Education",
+              "Other"
+            ]
+          },
+          "sum": {
+            "type": "integer",
+            "description": "Expense sum/amount",
+            "minimum": 1,
+            "maximum": 1000000000,
+            "example": 1000
+          },
+          "operation": {
+            "type": "string",
+            "description": "operation type",
+            "example": "expense"
+          }
+        }
+      },
+      "ExpenceResponce": {
+        "type": "object",
+        "properties": {
+          "result": {
+            "date": {
+              "type": "string",
+              "description": "Expense date",
+              "example": "2023-02-22"
+            },
+            "description": {
+              "type": "string",
+              "description": "Expense description",
+              "example": "alcohol"
+            },
+            "category": {
+              "type": "string",
+              "description": "Expense date",
+              "example": "Alcohol",
+              "enum": [
+                "Products",
+                "Alcohol",
+                "Entertainment",
+                "Health",
+                "Transport",
+                "Housing",
+                "Technique",
+                "Communal, communication",
+                "Sports, hobbies",
+                "Education",
+                "Other"
+              ]
+            },
+            "sum": {
+              "type": "integer",
+              "description": "Expense sum/amount",
+              "minimum": 1,
+              "maximum": 1000000000,
+              "example": 1000
+            },
+            "operation": {
+              "type": "string",
+              "description": "operation type",
+              "example": "expense"
+            },
+            "owner": {
+              "type": "string",
+              "description": "user id",
+              "example": "63f4b0a8b37be52621410390"
+            },
+            "_id": {
+              "type": "string",
+              "description": "transaction id",
+              "example": "63f5cc70a5590e6d9b235723"
+            },
+            "createdAt": {
+              "type": "string",
+              "description": "time of creationg expence transaction",
+              "example": "2023-02-22T08:04:00.157Z"
+            },
+            "updatedAt": {
+              "type": "string",
+              "description": "time of updating expence transaction",
+              "example": "2023-02-22T08:04:00.157Z"
+            }
+          },
+          "balance": {
+            "type": "integer",
+            "description": "balance after expens transaction",
+            "example": 100,
+            "minimum": 1,
+            "maximum": 10000000
+          }
+        }
+      },
+      "TransactinReport": {
+        "type": "object",
+        "properties": {
+          "_id":{},
+  
+          "expenses": {
+            "type": "object",
+            "properties": {
+              "total": {
+                "type": "integer",
+                "description": "total expence for this period",
+                "example": 3500
+              },
+              "incomesData": {
+                "type": "object",
+                "example": {
+                  "Alcohol": {
+                    "total": 4000,
+                    "whiskey": 3500,
+                    "beer": 500
+                  },
+                  "Health": {
+                    "total": 2000,
+                    "medicine": 500,
+                    "doctor": 1500
+                  }
+                }
+              }
+            }
+          }
+        }
+      },
+      "NewBalance": {
+        "required": ["newBalance"],
+        "type": "object",
+        "properties": {
+          "newBalance": {
+            "type": "integer",
+            "description": "New balance",
+            "example": 100,
+            "minimum": 1,
+            "maximum": 10000000
           }
         }
       }

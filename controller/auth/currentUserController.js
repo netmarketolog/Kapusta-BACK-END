@@ -1,5 +1,5 @@
 async function current(req, res, next) {
-  const { balance, email } = req.user;
+  const { balance, email, token } = req.user;
 
   return res.status(200).json({
     data: {
@@ -7,6 +7,7 @@ async function current(req, res, next) {
         email,
         balance,
       },
+      token,
     },
   });
 }
@@ -14,3 +15,4 @@ async function current(req, res, next) {
 module.exports = {
   current,
 };
+

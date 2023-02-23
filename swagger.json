@@ -1,7 +1,7 @@
 {
   "openapi": "3.0.1",
   "info": {
-    "version": "2.0.2",
+    "version": "1.0.1",
     "title": "Kapusta",
     "description": "API documentation for team project 'Kapusta'",
     "license": {
@@ -11,7 +11,8 @@
   },
   "consumes": ["application/json"],
   "produces": ["application/json"],
-  "servers": [{ "url": "http://localhost:3000" }],
+  "servers": [{ "url": "http://localhost:3000" },
+{ "url": "https://kapusta-wwgw.onrender.com/" }],
   "tags": [
     {
       "name": "Auth",
@@ -146,7 +147,7 @@
     "/transactions/": {
         "post": {
             "tags": ["Transactions"],
-            "summary": "Add expence transaction or add income transaction",
+            "summary": "Add new expence or income transaction",
             "security": [{ "Bearer": [] }],
             "parameters": [],
             "requestBody": {
@@ -187,9 +188,39 @@
         }
     },
     "/transactions/:operation": {
-        "get": {
-          "tags": ["Transactions"]
+      "get": {
+        "tags": ["Transactions"],
+        "summary": "Get all transactions for month",
+        "parameters": [
+          {
+            "name": "operation",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "enum": ["expense", "income"],
+              "description": "operation must be 'expense' or 'income'"
+            }
+          }
+        ],
+        "security": [{ "Bearer": [] }],
+        "responses": {
+          "200": {
+            "description": "Successful operation",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/GetTransactionResponse"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Bad request!",
+            "content": {}
+          }
         }
+      }
     },
     "/transactions/report/:operation": {
         "get": {
@@ -198,11 +229,32 @@
           "security": [{ "Bearer": [] }],
           "parameters": [
             {
-              "name": "date",
+              "name": "operation",
+              "in": "path",
+              "required": true,
+              "schema": {
+                "type": "string",
+                "enum": ["expense", "income"],
+                "description": "operation must be 'expense' or 'income'"
+              }
+            },
+            {
+              "name": "year",
               "in": "query",
               "required": true,
-              "type": "string",
-              "description": "Period dates. YYYY-MM format"
+              "schema": {
+                "type": "integer",
+                "description": "for which year you want report"
+              }
+            },
+            {
+              "name": "month",
+              "in": "query",
+              "required": true,
+              "schema": {
+                "type": "integer",
+                "description": "for which month you want report"
+              }
             }
           ],
           "responses": {
@@ -306,7 +358,6 @@
 
     }
   },
-
   "components": {
     "schemas": {
       "RegistrationRequest": {
@@ -381,7 +432,7 @@
       "TransactionRequest": {
         "type": "object",
         "required": ["date", "description", "category", "sum", "operation"],
-        "properties":{
+        "properties": {
           "date": {
             "type": "string",
             "description": "Expense/income date",
@@ -499,6 +550,72 @@
             "example": 100,
             "minimum": 1,
             "maximum": 10000000
+          }
+        }
+      },
+      "GetTransactionResponse": {
+        "type": "object",
+        "properties": {
+          "2023-1": {
+            "type": "object",
+            "properties": {
+              "transactions": {
+                "type": "object",
+                "description": "Transaction by date",
+                "properties": {
+                  "_id": {
+                    "type": "string",
+                    "description": "Id of transaction"
+                  },
+                  "date": {
+                    "type": "string",
+                    "format": "date",
+                    "description": "Date of transaction",
+                    "example": "02.05.2020"
+                  },
+                  "description": {
+                    "type": "string",
+                    "description": "name of transaction",
+                    "example": "pork"
+                  },
+                  "category": {
+                    "type": "string",
+                    "description": "Category of transaction",
+                    "example": "products"
+                  },
+                  "sum": {
+                    "type": "number",
+                    "description": "Sum of transaction"
+                  },
+                  "operation": {
+                    "type": "string",
+                    "description": "Type of transaction",
+                    "example": "expense"
+                  },
+                  "owner": {
+                    "type": "string",
+                    "description": "User's id",
+                    "example": "63f474913c3d2fc9924866df"
+                  },
+                  "createdAt": {
+                    "type": "string",
+                    "format": "date",
+                    "description": "Date creation of transaction",
+                    "example": "2023-02-21T17:39:50.076Z"
+                  },
+                  "updatedAt": {
+                    "type": "string",
+                    "format": "date",
+                    "description": "Date updation of transaction",
+                    "example": "2023-02-21T17:39:50.076Z"
+                  }
+                }
+              },
+              "total": {
+                "type": "integer",
+                "description": "amount of transactions"
+              }
+            }
           }
         }
       },

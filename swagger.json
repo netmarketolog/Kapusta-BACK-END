@@ -187,7 +187,7 @@
         }
         }
     },
-    "/transactions/:operation": {
+    "/transactions/{operation}": {
       "get": {
         "tags": ["Transactions"],
         "summary": "Get all transactions for month",
@@ -222,7 +222,7 @@
         }
       }
     },
-    "/transactions/report/:operation": {
+    "/transactions/report/{operation}": {
         "get": {
           "tags": ["Transactions"],
           "summary": "Get transactions report for some period",
@@ -283,7 +283,7 @@
           }
         }
     },
-    "/transactions/:transactionId": {
+    "/transactions/{transactionId}": {
         "delete": {
           "tags": ["Transactions"],
           "summary": "Delete transaction",

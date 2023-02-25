@@ -3,8 +3,6 @@ const bcrypt = require('bcrypt');
 const { Unauthorized } = require('http-errors');
 const jwt = require('jsonwebtoken');
 
-// const { JWT_SECRET } = process.env;
-
 async function login(req, res, next) {
   const { email, password } = req.body;
 

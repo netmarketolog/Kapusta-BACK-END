@@ -14,10 +14,10 @@ userRouter.patch(
   tryCatchWrapper(authorize),
   tryCatchWrapper(updateBalance)
 );
-// userRouter.get(
-//   '/current',
-//   tryCatchWrapper(authorize),
-//   tryCatchWrapper(current)
-// );
+userRouter.get(
+  '/current',
+  tryCatchWrapper(authorize),
+  tryCatchWrapper(current)
+);
 
 module.exports = userRouter;

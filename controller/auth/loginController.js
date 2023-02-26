@@ -4,6 +4,7 @@ const { Unauthorized } = require('http-errors');
 const { createToken } = require('../../helpers/createToken');
 const { Session } = require('../../models/sessionModel');
 
+
 async function login(req, res, next) {
   const { email, password } = req.body;
 

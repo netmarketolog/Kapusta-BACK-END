@@ -1,30 +1,30 @@
-const { User } = require("../../models");
-const mongoose = require("mongoose");
-const { BadRequest } = require("http-errors");
+const { Transaction } = require('../../models');
+const mongoose = require('mongoose');
+const { BadRequest } = require('http-errors');
 
-const { getAggregationObject } = require("../../helpers/getAggregationObject");
+const { getAggregationObject } = require('../../helpers/getAggregationObject');
 
 const getTransactionsController = async (req, res, next) => {
   const { _id } = req.user;
   const { operation } = req.params;
 
-  if (operation !== "expense" && operation !== "income")
-    return next(BadRequest("Bad request!"));
+  if (operation !== 'expense' && operation !== 'income')
+    return next(BadRequest('Bad request!'));
 
   const { filterByMonthes, addTotalSum } = getAggregationObject(operation);
 
-  const result = await User.aggregate([
+  const [result] = await Transaction.aggregate([
     {
-      $lookup: {
-        from: "transactions",
-        localField: "_id",
-        foreignField: "owner",
-        as: "userTransactions",
+      $match: {
+        owner: mongoose.Types.ObjectId(_id),
       },
     },
     {
-      $match: {
-        _id: mongoose.Types.ObjectId(_id),
+      $group: {
+        _id: '$owner',
+        userTransactions: {
+          $push: '$$ROOT',
+        },
       },
     },
     {
@@ -39,8 +39,7 @@ const getTransactionsController = async (req, res, next) => {
       },
     },
   ]);
-
-  res.json(result[0]);
+  res.json(result);
 };
 
 module.exports = { getTransactionsController };

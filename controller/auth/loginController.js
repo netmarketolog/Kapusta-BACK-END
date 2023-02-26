@@ -1,7 +1,9 @@
 const { User } = require('../../models/userModel');
 const bcrypt = require('bcrypt');
 const { Unauthorized } = require('http-errors');
-const jwt = require('jsonwebtoken');
+const { createToken } = require('../../helpers/createToken');
+const { Session } = require('../../models/sessionModel');
+
 
 async function login(req, res, next) {
   const { email, password } = req.body;
@@ -20,9 +22,8 @@ async function login(req, res, next) {
     throw Unauthorized('Password is wrong!');
   }
 
-  const token = jwt.sign({ id: storedUser._id }, process.env.JWT_SECRET, {
-    expiresIn: '24h',
-  });
+  const session = await Session.create({ uid: storedUser._id });
+  const token = await createToken(storedUser._id, session._id);
   await User.findByIdAndUpdate(storedUser._id, { token });
 
   res.json({

@@ -1,6 +1,6 @@
 const mongoose = require('mongoose');
 
-const { balanceSchema } = require("../schemas/user");
+const { balanceSchema } = require('../schemas/user');
 
 const schema = mongoose.Schema(
   {
@@ -14,7 +14,7 @@ const schema = mongoose.Schema(
       match: [/[a-z0-9]+@[a-z0-9]+/, 'user email is not valid!'],
     },
     token: {
-      type: String,
+      type: Object,
       default: null,
     },
     verify: {

@@ -19,7 +19,7 @@ const createToken = async (userId, sessionId) => {
   const token = {
     accessToken,
     refreshToken,
-    deadTime: Date.now() + 60000,
+    expiresIn: Date.now() + 60000,
   };
   return token;
 };

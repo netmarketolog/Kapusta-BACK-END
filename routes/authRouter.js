@@ -18,6 +18,6 @@ authRouter.post('/login', tryCatchWrapper(login));
 authRouter.post('/logout', tryCatchWrapper(authorize), tryCatchWrapper(logout));
 authRouter.get('/google', tryCatchWrapper(googleAuth));
 authRouter.get('/google-redirect', tryCatchWrapper(googleRedirect));
-authRouter.get('/refresh', tryCatchWrapper(refreshToken));
+authRouter.post('/refresh', tryCatchWrapper(refreshToken));
 
 module.exports = authRouter;

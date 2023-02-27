@@ -36,7 +36,9 @@ async function googleRedirect(req, res) {
   const payload = {
     id: user._id,
   };
-  const token = jwt.sign(payload, process.env.JWT_SECRET, { expiresIn: '12h' });
+  const token = jwt.sign(payload, process.env.JWT_ACCESS_SECRET, {
+    expiresIn: '12h',
+  });
   await User.findByIdAndUpdate(user._id, { token });
 
   return res.redirect(

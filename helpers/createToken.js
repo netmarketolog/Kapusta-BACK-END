@@ -5,7 +5,7 @@ const createToken = async (userId, sessionId) => {
     { uid: userId, sid: sessionId },
     process.env.JWT_ACCESS_SECRET,
     {
-      expiresIn: '15m',
+      expiresIn: '1m',
     }
   );
   const refreshToken = jwt.sign(
@@ -19,7 +19,7 @@ const createToken = async (userId, sessionId) => {
   const token = {
     accessToken,
     refreshToken,
-    expiresIn: Date.now() + 15 * 60 * 1000,
+    deadTime: Date.now() + 60000,
   };
   return token;
 };

@@ -35,9 +35,9 @@ async function googleRedirect(req, res) {
     user = await User.create({ email, verificationToken: null, verify: true });
   }
 
-  const payload = {
-    id: user._id,
-  };
+  // const payload = {
+  //   id: user._id,
+  // };
 
   const session = await Session.create({ uid: user._id });
 

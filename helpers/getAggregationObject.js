@@ -4,6 +4,20 @@ const getAggregationObject = operation => {
   const currentYear = date.getFullYear();
   const filterByMonthes = {};
   const addTotalSum = {};
+  const monthes = [
+    'January',
+    'February',
+    'March',
+    'April',
+    'May',
+    'June',
+    'July',
+    'August',
+    'September',
+    'October',
+    'November',
+    'December',
+  ];
 
   for (let i = 0; i < 6; i++) {
     const startMonth = currentMonth;
@@ -29,7 +43,7 @@ const getAggregationObject = operation => {
       endYear = currentYear - 1;
     }
 
-    filterByMonthes[`${startYear}-${start}`] = {
+    filterByMonthes[monthes[start]] = {
       transactions: {
         $filter: {
           input: '$userTransactions',
@@ -50,11 +64,11 @@ const getAggregationObject = operation => {
         },
       },
     };
-    addTotalSum[`${startYear}-${start}`] = {
+    addTotalSum[monthes[start]] = {
       transactions: 1,
       total: {
         $reduce: {
-          input: `$${startYear}-${start}.transactions`,
+          input: `$${monthes[start]}.transactions`,
           initialValue: 0,
           in: {
             $add: ['$$value', '$$this.sum'],

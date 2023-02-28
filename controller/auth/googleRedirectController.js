@@ -43,7 +43,7 @@ async function googleRedirect(req, res) {
 
   const token = await createToken(user._id, session._id);
 
-  const { accessToken, refreshToken, expiresIn } = token;
+  const { accessToken } = token;
 
   //  const accessToken = jwt.sign(payload, process.env.JWT_ACCESS_SECRET, {
   //    expiresIn: '12h',
@@ -51,9 +51,7 @@ async function googleRedirect(req, res) {
 
   await User.findByIdAndUpdate(user._id, { token });
 
-  return res.redirect(
-    `${process.env.FRONTEND_URL}?accessToken=${accessToken}&refreshToken=${refreshToken}&expiresIn=${expiresIn}&email=${email}`
-  );
+  return res.redirect(`${process.env.FRONTEND_URL}?accessToken=${accessToken}`);
 }
 
 module.exports = {

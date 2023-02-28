@@ -14,7 +14,7 @@ const deleteTransactionController = async (req, res, next) => {
   const transaction = await deleteTransaction(transactionId, _id);
   if (!transaction) return next();
 
-  res.json({ message: 'Transaction is deleted' });
+  res.json({ id: _id });
 };
 
 module.exports = { deleteTransactionController };

@@ -1,13 +1,13 @@
-const { mongoose } = require("mongoose");
-const { BadRequest } = require("http-errors");
-const { Transaction } = require("../../models");
+const { mongoose } = require('mongoose');
+const { BadRequest } = require('http-errors');
+const { Transaction } = require('../../models');
 
 const getReportController = async (req, res, next) => {
   const { _id } = req.user;
   const { operation } = req.params;
   let { year, month } = req.query;
   if (!year || !month || month > 12 || month < 1 || year < 2022)
-    throw BadRequest("Bad query request!");
+    throw BadRequest('Bad query request!');
 
   year = Number(year);
   month = Number(month);
@@ -30,38 +30,43 @@ const getReportController = async (req, res, next) => {
     {
       $group: {
         _id: {
-          category: "$category",
-          descr: "$description",
+          category: '$category',
+          descr: '$description',
         },
         total: {
-          $sum: "$sum",
+          $sum: '$sum',
         },
       },
     },
     {
       $project: {
         _id: 0,
-        name: "$_id.category",
+        name: '$_id.category',
         stat: {
-          name: "$_id.descr",
-          total: "$total",
+          name: '$_id.descr',
+          total: '$total',
         },
       },
     },
     {
       $sort: {
-        "stat.total": -1,
+        'stat.total': -1,
       },
     },
     {
       $group: {
-        _id: "$name",
+        _id: '$name',
         stats: {
-          $push: "$stat",
+          $push: '$stat',
         },
         total: {
-          $sum: "$stat.total",
+          $sum: '$stat.total',
         },
+      },
+    },
+    {
+      $sort: {
+        total: -1,
       },
     },
   ]);
@@ -74,16 +79,16 @@ const getReportController = async (req, res, next) => {
     },
     {
       $group: {
-        _id: "$operation",
+        _id: '$operation',
         total: {
-          $sum: "$sum",
+          $sum: '$sum',
         },
       },
     },
   ]);
 
   const result = {};
-  report.forEach((item) => {
+  report.forEach(item => {
     result[item._id] = item.total;
   });
   result.statistics = statistics;

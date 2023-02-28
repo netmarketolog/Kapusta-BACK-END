@@ -144,6 +144,44 @@
         }
       }
     },
+    "/auth/refresh": {
+      "post": {
+        "tags": ["Auth"],
+        "summary": "refresh token",
+        "parameters": [],
+        "requestBody": {
+          "description": "refresh token",
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/RefreshTokenRequest"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Successful operation",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/RefreshTokenResponse"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Bad request",
+            "content": {}
+          },
+          "401": {
+            "description": "Unauthorized",
+            "content": {}
+          }
+        }
+      }
+    },
     "/transactions/": {
         "post": {
             "tags": ["Transactions"],
@@ -329,7 +367,7 @@
           "content": {
             "application/json": {
               "schema": {
-                "$ref": "#/components/schemas/NewBalance"
+                "$ref": "#/components/schemas/NewBalanceRequest"
               }
             }
           }
@@ -340,7 +378,7 @@
             "content": {
               "application/json": {
                 "schema": {
-                  "$ref": "#/components/schemas/NewBalance"
+                  "$ref": "#/components/schemas/NewBalanceResponce"
                 }
               }
             }
@@ -351,6 +389,31 @@
           },
           "401": {
             "description": "Unauthorized",
+            "content": {}
+          }
+        }
+      }
+
+    },
+    "/users/current": {
+      "get": {
+        "tags": ["User"],
+        "summary": "Current user",
+        "parameters": [],
+        "security": [{ "Bearer": [] }],
+        "responses": {
+          "200": {
+            "description": "Successful operation",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/CurrentUserResponse"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Bad request",
             "content": {}
           }
         }
@@ -377,21 +440,45 @@
         }
       },
       "RegistrationResponse": {
-        "type": "array",
-        "items": {
-          "type": "object",
-          "properties": {
-            "email": {
-              "type": "string",
-              "description": "User's email",
-              "format": "email"
+        "type": "object",
+        "properties": {
+          "token": {
+            "type": "object",
+            "properties": {
+              "accessToken": {
+                "type": "string",
+                "description": "User's accessToken for app",
+                "example": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjYzZjQ5YWQyZDkyYmY3NTQ0MDQ4ZWZkNSIsImlhdCI6MTY3Njk3NDkzNiwiZXhwIjoxNjc2OTc4NTM2fQ.J8fIHTUNL7JXGQwRJBFfbZhX1eTiGk7U48sEnJOSsrw"
+              },
+              "refreshToken": {
+                "type": "string",
+                "description": "User's refreshToken for app",
+                "example": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjYzZjQ5YWQyZDkyYmY3NTQ0MDQ4ZWZkNSIsImlhdCI6MTY3Njk3NDkzNiwiZXhwIjoxNjc2OTc4NTM2fQ.J8fIHTUNL7JXGQwRJBFfbZhX1eTiGk7U48sEnJOSsrw"
+              },
+              "expiresIn": {
+                "type": "integer",
+                "description": "User's token expiresIn",
+                "example": "1677613258336"
+              }
+            }
+          },
+          "user": {
+            "type": "object",
+            "properties": {
+              "email": {
+                "type": "string",
+                "description": "User's email",
+                "format": "email",
+                "example": "user@mail.com"
+              },
+              "balance": {
+                "type": "number",
+                "description": "User's balance",
+                "example": "2023"
+              }
             }
           }
-        },
-        "example": [
-          { "email": "user1@gmail.com" },
-          { "email": "user2@gmail.com" }
-        ]
+        }
       },
       "LoginRequest": {
         "type": "object",
@@ -412,20 +499,71 @@
       "LoginResponse": {
         "type": "object",
         "properties": {
-          "email": {
-            "type": "string",
-            "description": "User's email",
-            "format": "email"
-          },
-          "balance": {
-            "type": "number",
-            "description": "User's balance",
-            "example": "2023"
-          },
           "token": {
+            "type": "object",
+            "properties": {
+              "accessToken": {
+                "type": "string",
+                "description": "User's accessToken for app",
+                "example": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjYzZjQ5YWQyZDkyYmY3NTQ0MDQ4ZWZkNSIsImlhdCI6MTY3Njk3NDkzNiwiZXhwIjoxNjc2OTc4NTM2fQ.J8fIHTUNL7JXGQwRJBFfbZhX1eTiGk7U48sEnJOSsrw"
+              },
+              "refreshToken": {
+                "type": "string",
+                "description": "User's refreshToken for app",
+                "example": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjYzZjQ5YWQyZDkyYmY3NTQ0MDQ4ZWZkNSIsImlhdCI6MTY3Njk3NDkzNiwiZXhwIjoxNjc2OTc4NTM2fQ.J8fIHTUNL7JXGQwRJBFfbZhX1eTiGk7U48sEnJOSsrw"
+              },
+              "expiresIn": {
+                "type": "integer",
+                "description": "User's token expiresIn",
+                "example": "1677613258336"
+              }
+            }
+          },
+          "user": {
+            "type": "object",
+            "properties": {
+              "email": {
+                "type": "string",
+                "description": "User's email",
+                "format": "email",
+                "example": "user@mail.com"
+              },
+              "balance": {
+                "type": "number",
+                "description": "User's balance",
+                "example": "2023"
+              }
+            }
+          }
+        }
+      },
+      "RefreshTokenRequest": {
+        "type": "object",
+        "properties": {
+          "refreshToken": {
             "type": "string",
-            "description": "User's token for app",
+            "description": "User's refreshToken for app",
             "example": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjYzZjQ5YWQyZDkyYmY3NTQ0MDQ4ZWZkNSIsImlhdCI6MTY3Njk3NDkzNiwiZXhwIjoxNjc2OTc4NTM2fQ.J8fIHTUNL7JXGQwRJBFfbZhX1eTiGk7U48sEnJOSsrw"
+          }
+        }
+      },
+      "RefreshTokenResponse": {
+        "type": "object",
+        "properties": {
+          "accessToken": {
+            "type": "string",
+            "description": "User's accessToken for app",
+            "example": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjYzZjQ5YWQyZDkyYmY3NTQ0MDQ4ZWZkNSIsImlhdCI6MTY3Njk3NDkzNiwiZXhwIjoxNjc2OTc4NTM2fQ.J8fIHTUNL7JXGQwRJBFfbZhX1eTiGk7U48sEnJOSsrw"
+          },
+          "refreshToken": {
+            "type": "string",
+            "description": "User's refreshToken for app",
+            "example": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjYzZjQ5YWQyZDkyYmY3NTQ0MDQ4ZWZkNSIsImlhdCI6MTY3Njk3NDkzNiwiZXhwIjoxNjc2OTc4NTM2fQ.J8fIHTUNL7JXGQwRJBFfbZhX1eTiGk7U48sEnJOSsrw"
+          },
+          "expiresIn": {
+            "type": "integer",
+            "description": "User's token expiresIn",
+            "example": "1677613258336"
           }
         }
       },
@@ -556,7 +694,7 @@
       "GetTransactionResponse": {
         "type": "object",
         "properties": {
-          "2023-1": {
+          "February": {
             "type": "object",
             "properties": {
               "transactions": {
@@ -616,6 +754,41 @@
                 "description": "amount of transactions"
               }
             }
+          },
+          "January": {
+            "type": "object",
+            "properties": {
+              "transactions": {},
+              "total": {}
+            }
+          },
+          "December": {
+            "type": "object",
+            "properties": {
+              "transactions": {},
+              "total": {}
+            }
+          },
+          "November": {
+            "type": "object",
+            "properties": {
+              "transactions": {},
+              "total": {}
+            }
+          },
+          "October": {
+            "type": "object",
+            "properties": {
+              "transactions": {},
+              "total": {}
+            }
+          },
+          "September": {
+            "type": "object",
+            "properties": {
+              "transactions": {},
+              "total": {}
+            }
           }
         }
       },
@@ -662,7 +835,20 @@
           }
         }
       },
-      "NewBalance": {
+      "NewBalanceRequest": {
+        "required": ["newBalance"],
+        "type": "object",
+        "properties": {
+          "balance": {
+            "type": "integer",
+            "description": "New balance",
+            "example": 100,
+            "minimum": 1,
+            "maximum": 10000000
+          }
+        }
+      },
+      "NewBalanceResponce": {
         "required": ["newBalance"],
         "type": "object",
         "properties": {
@@ -677,6 +863,47 @@
             "example": 100,
             "minimum": 1,
             "maximum": 10000000
+          }
+        }
+      },
+      "CurrentUserResponse": {
+        "type": "object",
+        "properties": {
+          "user": {
+            "type": "object",
+            "properties": {
+              "email": {
+                "type": "string",
+                "description": "User's email",
+                "format": "email",
+                "example": "user@mail.com"
+              },
+              "balance": {
+                "type": "number",
+                "description": "User's balance",
+                "example": "2023"
+              }
+            }
+          },
+          "token": {
+            "type": "object",
+            "properties": {
+              "accessToken": {
+                "type": "string",
+                "description": "User's accessToken for app",
+                "example": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjYzZjQ5YWQyZDkyYmY3NTQ0MDQ4ZWZkNSIsImlhdCI6MTY3Njk3NDkzNiwiZXhwIjoxNjc2OTc4NTM2fQ.J8fIHTUNL7JXGQwRJBFfbZhX1eTiGk7U48sEnJOSsrw"
+              },
+              "refreshToken": {
+                "type": "string",
+                "description": "User's refreshToken for app",
+                "example": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjYzZjQ5YWQyZDkyYmY3NTQ0MDQ4ZWZkNSIsImlhdCI6MTY3Njk3NDkzNiwiZXhwIjoxNjc2OTc4NTM2fQ.J8fIHTUNL7JXGQwRJBFfbZhX1eTiGk7U48sEnJOSsrw"
+              },
+              "expiresIn": {
+                "type": "integer",
+                "description": "User's token expiresIn",
+                "example": "1677613258336"
+              }
+            }
           }
         }
       }

@@ -51,10 +51,10 @@ const getAggregationObject = operation => {
           cond: {
             $and: [
               {
-                $gte: ['$$transaction.createdAt', new Date(startYear, start)],
+                $gte: ['$$transaction.date', new Date(startYear, start)],
               },
               {
-                $lt: ['$$transaction.createdAt', new Date(endYear, end)],
+                $lt: ['$$transaction.date', new Date(endYear, end)],
               },
               {
                 $eq: ['$$transaction.operation', operation],

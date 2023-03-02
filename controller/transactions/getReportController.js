@@ -20,7 +20,7 @@ const getReportController = async (req, res, next) => {
     {
       $match: {
         owner: mongoose.Types.ObjectId(_id),
-        createdAt: {
+        date: {
           $gte: new Date(year, startMonth),
           $lt: new Date(endYear, endMonth),
         },
@@ -75,6 +75,10 @@ const getReportController = async (req, res, next) => {
     {
       $match: {
         owner: mongoose.Types.ObjectId(_id),
+        date: {
+          $gte: new Date(year, startMonth),
+          $lt: new Date(endYear, endMonth),
+        },
       },
     },
     {

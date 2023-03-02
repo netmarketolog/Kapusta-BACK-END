@@ -65,7 +65,6 @@ const getAggregationObject = operation => {
       },
     };
     addTotalSum[monthes[start]] = {
-      transactions: 1,
       total: {
         $reduce: {
           input: `$${monthes[start]}.transactions`,

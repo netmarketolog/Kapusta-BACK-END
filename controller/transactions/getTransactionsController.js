@@ -40,7 +40,7 @@ const getTransactionsController = async (req, res, next) => {
     },
   ]);
 
-  const transactions = await Transaction.find({ owner: _id }).sort({
+  const transactions = await Transaction.find({ owner: _id, operation }).sort({
     date: -1,
   });
   const data = { salary: result, transactions };

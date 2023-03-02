@@ -39,7 +39,12 @@ const getTransactionsController = async (req, res, next) => {
       },
     },
   ]);
-  res.json(result);
+
+  const transactions = await Transaction.find({ owner: _id }).sort({
+    date: -1,
+  });
+  const data = { salary: result, transactions };
+  res.json(data);
 };
 
 module.exports = { getTransactionsController };

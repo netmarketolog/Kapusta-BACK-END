@@ -4,7 +4,7 @@ const { Token } = require('../../models/blackList');
 const { Session } = require('../../models/sessionModel');
 
 async function logout(req, res, next) {
-  const { _id, sid } = req.user;
+  const { _id, sid, token } = req.user;
 
   const storedUser = await User.findById({
     _id,
@@ -14,9 +14,8 @@ async function logout(req, res, next) {
     throw Unauthorized('Not authorized');
   }
   await Token.create({
-    token: storedUser.token.accessToken,
+    token,
   });
-  await User.findByIdAndUpdate(_id, { token: null });
   await Session.findByIdAndRemove(sid);
 
   res.status(204).json();

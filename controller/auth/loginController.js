@@ -4,7 +4,6 @@ const { Unauthorized } = require('http-errors');
 const { createToken } = require('../../helpers/createToken');
 const { Session } = require('../../models/sessionModel');
 
-
 async function login(req, res, next) {
   const { email, password } = req.body;
 
@@ -24,7 +23,6 @@ async function login(req, res, next) {
 
   const session = await Session.create({ uid: storedUser._id });
   const token = await createToken(storedUser._id, session._id);
-  await User.findByIdAndUpdate(storedUser._id, { token });
 
   res.json({
     token,

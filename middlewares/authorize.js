@@ -23,9 +23,10 @@ const authorize = async (req, res, next) => {
     const user = await User.findById(uid);
     const session = await Session.findById(sid);
 
-    if (user?.token?.accessToken !== token || !session) {
+    if (!user || !session) {
       throw Unauthorized('Not authorized');
     }
+    user.token = token;
     user.sid = sid;
     req.user = user;
     next();

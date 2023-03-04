@@ -1,7 +1,6 @@
 const { User } = require('../../models/userModel');
 const queryString = require('query-string');
 const axios = require('axios');
-const jwt = require('jsonwebtoken');
 const { Session } = require('../../models/sessionModel');
 const { createToken } = require('../../helpers/createToken');
 
@@ -35,21 +34,11 @@ async function googleRedirect(req, res) {
     user = await User.create({ email, verificationToken: null, verify: true });
   }
 
-  // const payload = {
-  //   id: user._id,
-  // };
-
   const session = await Session.create({ uid: user._id });
 
   const token = await createToken(user._id, session._id);
 
   const { accessToken } = token;
-
-  //  const accessToken = jwt.sign(payload, process.env.JWT_ACCESS_SECRET, {
-  //    expiresIn: '12h',
-  //  });
-
-  await User.findByIdAndUpdate(user._id, { token });
 
   return res.redirect(`${process.env.FRONTEND_URL}?accessToken=${accessToken}`);
 }

@@ -2,7 +2,6 @@ const jwt = require('jsonwebtoken');
 const { Unauthorized } = require('http-errors');
 const { Session } = require('../../models/sessionModel');
 const { createToken } = require('../../helpers/createToken');
-const { User } = require('../../models/userModel');
 const { JWT_REFRESH_SECRET } = process.env;
 
 const refreshToken = async (req, res, next) => {
@@ -14,7 +13,6 @@ const refreshToken = async (req, res, next) => {
     if (!session) return next(Unauthorized('Not authorized'));
 
     const token = await createToken(uid, sid);
-    await User.findByIdAndUpdate(uid, { token });
     res.json(token);
   } catch (e) {
     throw Unauthorized('Not authorized');

@@ -17,9 +17,6 @@ async function register(req, res, next) {
     const session = await Session.create({ uid: savedUser._id });
     const token = await createToken(savedUser._id, session._id);
 
-    await User.findByIdAndUpdate(savedUser._id, {
-      token,
-    });
     res.status(201).json({
       token,
       user: {

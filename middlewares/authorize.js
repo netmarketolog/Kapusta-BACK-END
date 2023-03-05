@@ -26,7 +26,7 @@ const authorize = async (req, res, next) => {
     if (!user || !session) {
       throw Unauthorized('Not authorized');
     }
-    user.token = token;
+    // user.token = token;
     user.sid = sid;
     req.user = user;
     next();

@@ -38,9 +38,11 @@ async function googleRedirect(req, res) {
 
   const token = await createToken(user._id, session._id);
 
-  const { accessToken } = token;
+  const { accessToken, refreshToken, expiresIn } = token;
 
-  return res.redirect(`${process.env.FRONTEND_URL}?accessToken=${accessToken}`);
+  return res.redirect(
+    `${process.env.FRONTEND_URL}?accessToken=${accessToken}&refreshToken=${refreshToken}&expiresIn=${expiresIn}`
+  );
 }
 
 module.exports = {

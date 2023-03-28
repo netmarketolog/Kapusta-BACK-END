@@ -10,6 +10,7 @@ const {
   googleRedirect,
   refreshToken,
 } = require('../controller/auth');
+const { passwordRecovery } = require('../controller/auth/passwordRecovery');
 
 const authRouter = express.Router();
 
@@ -19,5 +20,6 @@ authRouter.post('/logout', tryCatchWrapper(authorize), tryCatchWrapper(logout));
 authRouter.get('/google', tryCatchWrapper(googleAuth));
 authRouter.get('/google-redirect', tryCatchWrapper(googleRedirect));
 authRouter.post('/refresh', tryCatchWrapper(refreshToken));
+authRouter.post('/password/recovery', tryCatchWrapper(passwordRecovery));
 
 module.exports = authRouter;

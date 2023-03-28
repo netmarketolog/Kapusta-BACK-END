@@ -14,7 +14,7 @@ const sendEmailService = async (email, subject, text) => {
 
   const transporter = nodemailer.createTransport(config);
   const emailOptions = {
-    from: process.env.EMAIL,
+    from: `FinTrack <${process.env.EMAIL}>`,
     to: email,
     subject,
     text,

@@ -5,7 +5,7 @@ const { v4: uuidv4 } = require('uuid');
 
 const { sendEmailService } = require('../../service/sendEmailService');
 
-const passwordRecovery = async (req, res, next) => {
+const passwordRecovery = async (req, res) => {
   const { email } = req.body;
   const password = uuidv4();
   const salt = await bcrypt.genSalt();
@@ -15,7 +15,7 @@ const passwordRecovery = async (req, res, next) => {
     { email },
     { $set: { password: hashedPassword } }
   );
-  if (!user) next(Unauthorized('User not found!'));
+  if (!user) throw Unauthorized('User not found!');
 
   await sendEmailService(
     email,

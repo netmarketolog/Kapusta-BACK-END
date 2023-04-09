@@ -1,8 +1,7 @@
 const { isValidObjectId } = require('mongoose');
 const { BadRequest } = require('http-errors');
 
-const { deleteTransaction } = require('../../service/transactions');
-const { User } = require('../../models');
+const { User, Transaction } = require('../../models');
 
 const deleteTransactionController = async (req, res, next) => {
   const { transactionId } = req.params;
@@ -12,7 +11,10 @@ const deleteTransactionController = async (req, res, next) => {
       'Argument passed in must be a string of 12 bytes or a string of 24 hex characters or an integer'
     );
 
-  const transaction = await deleteTransaction(transactionId, _id);
+  const transaction = await Transaction.findOneAndRemove({
+    _id: transactionId,
+    owner: _id,
+  });
   if (!transaction) return next();
   let newBalance;
   transaction.operation === 'income'
